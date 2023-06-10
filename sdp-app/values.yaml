@@ -1,0 +1,69 @@
+namespace: sdp
+database:
+  replicaCount: 3
+  version: "6.0.5"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+app:
+  name: sdp-app
+  replicaCount: 2
+
+  image:
+    repository: anoopvm/sdp-app
+    pullPolicy: IfNotPresent
+    tag: "v0.0.1"
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  certificateArn: arn:aws:acm:us-east-1:889332921058:certificate/dbec3dd3-b823-47bc-9549-99a2d1b25e56
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
