@@ -27,10 +27,13 @@ module "eks-cluster" {
   source = "../modules/eks-cluster"
 
   name                 = var.eks_name
+  region               = var.region
   vpc_id               = module.network_infra.vpc_id
   app_tier_subnet_ids  = module.network_infra.app_tier_private_subnets_ids
   data_tier_subnet_ids = module.network_infra.data_tier_private_subnets_ids
   public_subnet_ids    = module.network_infra.public_subnets_ids
   public_access_ips    = var.public_access_ips
+  ami_name             = var.ami_name
+  ami_version          = var.ami_version
   tags                 = var.tags
 }

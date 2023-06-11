@@ -1,0 +1,75 @@
+---
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb
+  namespace: {{ .Values.namespace }}
+spec:
+  members: {{ .Values.database.replicaCount }}
+  type: ReplicaSet
+  version: {{ .Values.database.version }}
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: {{ .Values.database.adminUsername }}
+      db: admin
+      passwordSecretRef:
+        name: admin-password
+      roles:
+        - name: clusterAdmin
+          db: admin
+        - name: userAdminAnyDatabase
+          db: admin
+      scramCredentialsSecretName: scram
+    - name: {{ .Values.database.appUsername }}
+      db: admin
+      passwordSecretRef:
+        name: app-rw-user-password
+      roles:
+        - name: readWrite
+          db: admin
+      scramCredentialsSecretName: app-rw-scram
+  additionalMongodConfig:
+    storage.wiredTiger.engineConfig.journalCompressor: zlib
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongod
+            resources:
+              limits:
+                cpu: 0.3
+                memory: 300Mi
+              requests:
+                cpu: 0.2
+                memory: 200Mi
+          - name: mongodb-agent
+            readinessProbe:
+              failureThreshold: 100
+              initialDelaySeconds: 10
+            resources:
+              limits:
+                cpu: 0.3
+                memory: 300Mi        
+              requests:
+                cpu: 0.2
+                memory: 200Mi         
+          affinity:
+            podAntiAffinity:
+              prefferedDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - mongodb-svc
+                  topologyKey: topology.kubernetes.io/zone
+          nodeSelector:
+            tier: data
+          tolerations:
+            - key: tier
+              operator: Equal
+              value: data
+              effect: NoSchedule  

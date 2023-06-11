@@ -7,9 +7,9 @@ provider "aws" {
 }
 
 locals {
-  private_subnet_groups = ["app-tier", "data-tier"]
-  #private_subnet_names = [ for subnet, az in zipmap(local.private_subnet_groups, var.azs): "${var.name}-${keys(item)}-${values(item)}-private"]
-  private_subnet_names = [ for subnet, az in zipmap(local.private_subnet_groups, var.azs): "${var.name}-${subnet}-${az}-private"]
+  tiers = ["app-tier", "data-tier"]
+  private_subnet_names = [ for item in setproduct(local.tiers, var.azs): "${var.name}-${item[0]}-${item[1]}-private"]
+  
 }
 
 module "vpc" {

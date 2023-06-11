@@ -1,6 +1,5 @@
 variable "region" {
   type    = string
-  default = "us-east-1"
 }
 
 variable "name" {
@@ -30,4 +29,12 @@ variable "public_access_ips" {
 
 variable "tags" {
   type = map
+}
+
+variable "ami_name" {
+  type = string
+}
+
+variable "ami_version" {
+  type = string
 }

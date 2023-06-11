@@ -5,10 +5,6 @@ locals {
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 }
 
-provider "aws" {
-  region = var.region
-}
-
 provider "kubernetes" {
   host                   = local.host
   cluster_ca_certificate = local.cluster_ca_certificate
@@ -34,6 +30,13 @@ provider "helm" {
 
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
+data "aws_ami" "eks_ami" {
+  owners           = ["self"]
+  filter {
+    name = "name"
+    values = ["${var.ami_name}-${var.ami_version}"]
+  }
+}
 
 module "ebs_csi_role" {
   source = "../eks_role"
@@ -92,16 +95,18 @@ module "eks" {
       desired_size = 2
       min_size     = 1
       subnet_ids = var.app_tier_subnet_ids
-      #ami_id        = data.aws_ami.eks_frontend 
+      ami_id        = data.aws_ami.eks_ami.image_id
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=tier=app'"
     },
     database = {
       name = "database"
 
-      max_size     = 3
-      desired_size = 2
+      max_size     = 4
+      desired_size = 3
       min_size     = 1
       subnet_ids   = var.data_tier_subnet_ids
-      #ami_id        = data.aws_ami.eks_backend 
+      ami_id        = data.aws_ami.eks_ami.image_id
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=tier=data'"
     }
   }
   tags = var.tags

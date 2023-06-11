@@ -1,0 +1,6 @@
+dashboards:
+  default:
+    node-metrics:
+      url: https://raw.githubusercontent.com/rfmoz/grafana-dashboards/master/prometheus/node-exporter-full.json
+    kubernetes:
+      url: https://raw.githubusercontent.com/instrumentisto/grafana-dashboard-kubernetes-prometheus/master/dashboard.json
