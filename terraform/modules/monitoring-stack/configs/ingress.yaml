@@ -1,0 +1,11 @@
+services:
+      prometheus:
+        prefix: "prometheus"
+        name: "prometheus-server"
+        namespace: "monitoring"
+        port: 80
+      alert-manager:
+        prefix: "alert-manager"
+        name: "prometheus-alertmanager"
+        namespace: "monitoring"
+        port: 9093
