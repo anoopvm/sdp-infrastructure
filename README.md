@@ -24,13 +24,13 @@ Following criterias were considered during the design.
 ## Code Overview
 All resources created as part of the excercise is through Infrastructure as Code. Manual interference is limited to version management of certain components like helm charts, ami version etc. These could be automated as well but are avoided by design to enable better version control practices and code (IaC) reviews.
 Contents of each folder/file as below:
-**terraform:** The terraform folder contains all the modules used for EKS cluster creation, roles, ingress controller and a few helm releases (monitoring stack).
-**helm:** Helm charts for devops practical web app deployment and the mongodb pods. It also contains a reusable ingress helm chart which can be used by other modules.
-**docker:** Docker file used for dockerizing devops practical web app.
-**images:** Packer file used for custom ami creation.
-**ansible:** Ansible script to do a quick sanity check on instances created using the custom image.
-**release-conifgs:** Single place for all the configurations. This is the only place where any configuration changes are made. Tried to make the configs as simple as possible by exposing only required configurations. As the project grows more configs can be exposed here as required. This folder also segragates the configuration for each environment (dev, staging, production etc).
-**Makefile:** Single entrypoint for all the build and deployment activities for this exercise.
+<br>**terraform:** The terraform folder contains all the modules used for EKS cluster creation, roles, ingress controller and a few helm releases (monitoring stack).
+<br>**helm:** Helm charts for devops practical web app deployment and the mongodb pods. It also contains a reusable ingress helm chart which can be used by other modules.
+<br>**docker:** Docker file used for dockerizing devops practical web app.
+<br>**images:** Packer file used for custom ami creation.
+<br>**ansible:** Ansible script to do a quick sanity check on instances created using the custom image.
+<br>**release-conifgs:** Single place for all the configurations. This is the only place where any configuration changes are made. Tried to make the configs as simple as possible by exposing only required configurations. As the project grows more configs can be exposed here as required. This folder also segragates the configuration for each environment (dev, staging, production etc).
+<br>**Makefile:** Single entrypoint for all the build and deployment activities for this exercise.
 ## Usage: Build and deployment operations
 The following operation list all the available build and deployment operations
 ```
@@ -50,7 +50,7 @@ Usage:
 ```
 make build-docker VERSION=v0.0.1
 ```
-##### build-packer-image
+### build-packer-image
 Builds new aws ami. Packer file is images/eks_node_instance.pkr.hcl. After making changes, if any, please update the new version before building in local.version at the beginning.
 ```
 locals {
@@ -67,7 +67,7 @@ Usage:
 ```
 make build-packer-image
 ```
-##### build-infra
+### build-infra
 This will only lint, validate and plan terrafrom for all the cloud infrastructure like VPC, subnets, EKS cluster, security groups, roles, addons, etc. This will not deploy any infrastructure. This is for review purpose and could be used for peer reviews before deployment.
 
 The following configurations are required for this command.
