@@ -1,0 +1,17 @@
+## Values here might be overridden 
+## by the configs in release-configs
+name: monitoring
+namespace: ingress
+certificateArn: ""
+services: {}
+# Example:
+#  prometheus:
+#    prefix: "prometheus"
+#    name: "prometheus-server"
+#    namespace: "monitoring"
+#    port: 80
+#  alert-manager:
+#    prefix: "alert-manager"
+#    name: "prometheus-alertmanager"
+#    namespace: "monitoring"
+#    port: 9093

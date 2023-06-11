@@ -1,4 +1,5 @@
 provider "helm" {
+  debug = true
   kubernetes {
     config_path = "~/.kube/config"
   }
@@ -33,11 +34,15 @@ resource "helm_release" "sdp_app" {
   version   = var.sdp_helm_version
   set {
     name  = "app.image.tag"
-    value = var.sdp_version
+    value = var.sdp_docker_version
   }
   set {
     name  = "database.namespace"
     value = var.sdp_namespace
+  }
+  set {
+    name  = "app.certificateArn"
+    value = var.certificate_arn
   }
   set_sensitive {
     name  = "database.adminUsername"

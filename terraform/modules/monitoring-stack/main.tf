@@ -31,7 +31,7 @@ resource "helm_release" "ingress" {
   chart = "${path.module}/../../../helm/ingress/"
   namespace = local.namespace
   create_namespace = true
-  version = "0.1.2"
+  version = "0.1.1"
 
   values = [
     "${file("${path.module}/configs/ingress.yaml")}"

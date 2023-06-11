@@ -26,22 +26,41 @@ spec:
       ports:
         - name: http
           containerPort: {{ .Values.app.service.port }}
-    readinessProbe:
-      tcpSocket:
-        port: http
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    livenessProbe:
-      tcpSocket:
-        port: http
-      initialDelaySeconds: 10
-      periodSeconds: 20 
-    env:
-      - name: MONGODB_URL 
-        valueFrom:
-          secretKeyRef:
-            name: mongodb-admin-app-rw-user
-            key: connectionString.standardSrv 
+      resources: 
+        {{- toYaml $.Values.app.resources | nindent 12 }}
+      env:
+        - name: MONGODB_URL 
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-admin-app-rw-user
+              key: connectionString.standardSrv         
+      readinessProbe:
+        tcpSocket:
+          port: http
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      livenessProbe:
+        tcpSocket:
+          port: http
+        initialDelaySeconds: 10
+        periodSeconds: 20 
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - sdp-app
+            topologyKey: topology.kubernetes.io/zone
+    nodeSelector:
+      tier: app
+    tolerations:
+      - key: tier
+        operator: Equal
+        value: storage
+        effect: NoSchedule    
 ---
 apiVersion: v1
 kind: Service

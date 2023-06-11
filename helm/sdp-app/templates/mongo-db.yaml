@@ -32,4 +32,44 @@ spec:
       scramCredentialsSecretName: app-rw-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
-
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongod
+            resources:
+              limits:
+                cpu: 0.3
+                memory: 300Mi
+              requests:
+                cpu: 0.2
+                memory: 200Mi
+          - name: mongodb-agent
+            readinessProbe:
+              failureThreshold: 100
+              initialDelaySeconds: 10
+            resources:
+              limits:
+                cpu: 0.3
+                memory: 300Mi        
+              requests:
+                cpu: 0.2
+                memory: 200Mi         
+          affinity:
+            podAntiAffinity:
+              prefferedDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - mongodb-svc
+                  topologyKey: topology.kubernetes.io/zone
+          nodeSelector:
+            tier: data
+          tolerations:
+            - key: tier
+              operator: Equal
+              value: data
+              effect: NoSchedule  

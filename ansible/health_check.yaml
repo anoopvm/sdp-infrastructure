@@ -1,0 +1,15 @@
+---
+- name: Health check
+  vars:
+    ansible_connection: aws_ssm
+    ansible_aws_ssm_bucket_name: avm-test-bucket-12345
+
+    services:
+    - kubelet.service
+    - containerd.service
+    - ntpd.service      
+
+  gather_facts: false
+  hosts: all
+  roles:
+    - { role: health_check, services_list: "{{ services }}" }

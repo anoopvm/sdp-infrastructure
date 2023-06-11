@@ -2,6 +2,10 @@ variable "vpc_name" {
   type = string
 }
 
+variable "region" {
+  type = string
+}
+
 variable "cidr" {
   type    = string
   default = "10.0.0.0/16"
@@ -27,6 +31,14 @@ variable "public_subnets" {
 
 variable "public_access_ips" {
   type = list(any)
+}
+
+variable "ami_name" {
+  type = string
+}
+
+variable "ami_version" {
+  type = string
 }
 
 variable "tags" {

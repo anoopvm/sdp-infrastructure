@@ -1,0 +1,15 @@
+- name: Validate kubelet service status
+  service_facts:
+  register: services_state
+
+- name: Debug
+  debug:
+    var: services_state.ansible_facts.services["{{ item }}"]
+  with_items: "{{ services_list }}"
+
+- name: Fail if a service is unhealthy else skip
+  fail:
+    msg: failed
+  when: services_state.ansible_facts.services[item].state != 'running'
+  with_items: "{{ services_list }}"
+
