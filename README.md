@@ -5,6 +5,7 @@ The following tasks has been completed.
 - Dockerized the application and deployed as autoscaling kubernetes pods.
 - MongoDB running as pods.
 - [Screenshots](screenshots.md)
+- [Commands used](## Commands and Usage: Build and deployment operations)  
 - Kuberenetes components are deployed using helm charts and terraform helm provider.
 - Created EC2 ami using Packer and is being used for EKS nodes.
 - Secuirity is considered in every stage of the design. More information here.
@@ -106,7 +107,7 @@ Following criterias were considered during the design also lists various approac
 - Tried to demonstrate version based IaC bundles which is a key feature to enable gitOps. Eg. version helm charts.
 - Currently some code is not bundled using version as part of this exercise, but it can be easily extended using git releases/tags  and an extra git repository for realease configs.
 - A docker based virtual environment can be easily created to make development, testing, or deployment easier. Not included currently.
-## Command and Usage: Build and deployment operations
+## Commands and Usage: Build and deployment operations
 The following operation list all the available build and deployment operations
 ```
 $ make [TAB]
