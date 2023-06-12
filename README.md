@@ -207,7 +207,7 @@ make deploy-infra ENV=<dev|staging|prod>
 ```
 ### build-app
 Like build-infra this only do validation and terraform plan for all the kubernetes manifests declared in helm charts.
-The following configurations are required. Helm recommends to use versioned charts, usually resides in Chart.yaml. Terraform uses that version for maintaining its idempotent nature. The helm chart must be versioned in respective Chart.yaml if making any change and must be updated in `release-configs/<dev|staging|prod>/application-terraform.tfvars`. `certificate_arn` is the ACM certificate arn (Only supports ACM certificates currently, refer HERE#####). `sdp_namepace` is the namespace where the devops practical web-app will be deployed.
+The following configurations are required. Helm recommends to use versioned charts, usually resides in Chart.yaml. Terraform uses that version for maintaining its idempotent nature. The helm chart must be versioned in respective Chart.yaml if making any change and must be updated in `release-configs/<dev|staging|prod>/application-terraform.tfvars`. `certificate_arn` is the ACM certificate arn (Only supports ACM certificates currently, please refer [here](#acm-certificate-configuration)). `sdp_namepace` is the namespace where the devops practical web-app will be deployed.
 ```
 ## Application Variables
 sdp_namespace = "sdp"
