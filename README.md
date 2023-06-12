@@ -15,12 +15,6 @@ The following tasks has been completed.
 ## Architecture
 I used a simple three tier architecture with the application loadbalancers in public facing subnets and other components (application and database) deployed in private subnets. A very high level architecture is as shown in the image.
 ![hl-architecture](https://github.com/anoopvm/sdp-infrastructure/assets/24317749/3878f531-ca63-42de-a460-d3be756bae8b)
-### Design considerations
-Following criterias were considered during the design. 
-- Scalability
-- Availability
-- Security
-- Operational efficiency
 ## Code Overview
 All resources created as part of the excercise is through Infrastructure as Code. Manual interference is limited to version management of certain components like helm charts, ami version etc. These could be automated as well but are avoided by design to enable better version control practices and code (IaC) reviews.
 Contents of each folder/file as below:
@@ -31,7 +25,87 @@ Contents of each folder/file as below:
 <br><br>**ansible:** Ansible script to do a quick sanity check on instances created using the custom image.
 <br><br>**release-conifgs:** Single place for all the configurations. This is the only place where any configuration changes are made. Tried to make the configs as simple as possible by exposing only required configurations. As the project grows more configs can be exposed here as required. This folder also segragates the configuration for each environment (dev, staging, production etc).
 <br><br>**Makefile:** Single entrypoint for all the build and deployment activities for this exercise.
-## Build and deployment operations
+## Components
+#### EKS Cluster
+- One EKS cluster spanning across two availability zones. Currently configured for us-east-1a and us-east-1b. Easy to change the configuration for different regions.
+- The web application and database are deployed in private subnet and is only accessbile to a public subnet through Application load balancers.
+- Routes are configured using ALB ingress contoller.
+- End to End deployment is managed using idempotent Infrastructure as Code. Terraform, helm charts, and eksctl are used.
+- Minimal configs and single 'make' command to build EKS cluster from scratch. Easy to deploy using CICD tools.
+- Kubernetes control plane access is through OIDC token only.
+- Instance access is managed by AWS SSM. No external or internal SSH service access.
+- Seperate autoscaling group for app tier and data tier enabling efficient scaling strategy.
+#### Devops Practical web app
+- Deployed as stateless horizontally scalable deployments accessible from a load balancer.
+- SSL/TLS handshake happens at ALB using ACM certificates.
+- http connections are redirected to https even before reaching the application.
+- Horizontal pod autoscaling enabled.
+- Configured with liveliness and readiness probes for fault-tolerance.
+- Configured with security contexts to avoid container privilage escalations.
+- Pods are spread across availability zones using the topology spread constraints.
+- Deployed using helm charts managed by versioned releases.
+#### Mongodb
+- Deployed CRDs from mongodb community operator - https://github.com/mongodb/mongodb-kubernetes-operator
+- The mongodb operator provides a lot of features out of the box like:
+  - Mongodb replicasets
+  - Scaling up and down
+  - Version upgrade and downgrade
+  - Authentication
+  - Monitoring
+- The endpoints are accessbile only within kubernetes.
+- Credentials are handled using AWS secrets during deployment.
+- EBS volumes are created using EBS CSI drivers on demand. Statefulset replicas retains EBS volumes.
+- Pods are spread across availability zones using the topology spread constraints.
+- Deployed using helm charts managed by versioned releases.
+#### Custom AWS AMI
+- Created a custom AWS AMI for the pupose of this exercise only.
+  - AWS images use chronyd for time synchronization- https://chrony.tuxfamily.org/
+  - Changed the default time synchornyzation deamon to ntpd for the purpose of custom AMI creation.
+- The image version is managed using explicit versions similar to the Helm's recommendations. 
+- This enables to use different versions of images in different environment.
+- Simplified validation, linting and building image all through single 'make' command.
+#### Ansible Sanity check
+- Dynamic aws inventory creation using ec2_aws plugin.
+- Dynamic inventory avoids outdated inventories especially useful for EKS and autoscling environments.
+- Checks status of services like ntpd, container runtime, and kubelet etc.
+- Run through single 'make' command.
+### Design considerations
+Following criterias were considered during the design also lists various approaches implemented and possible improvements.
+##### Scalability
+- Two seperate autoscaling groups.
+  - One for app tier (devops practical webapp)
+  - Another one for the data tier (Mongo DB)
+  - This allows more efficient handling of horizontal scaling. 
+  - Ability to choose different EC2 instance types that matches memory to CPU ratio.
+- The EKS module provides the provision to enable cluster autoscaler but not enabled currently for this exercise.
+- Horizontal Pod autoscaler enabled for the web application pod.
+- Mongodb operator provides replicaset scaling features. But require additional tooling and benchmarking.
+##### Availability
+- Avoided all single point of failures for the core applications.
+- The EKS cluster is deployed in 2 availability zones for extra availability.
+- Pods are topologically spread across the 2 availability zones for extra availability.
+- Horizontal pod autoscaler provides availabiltiy in case of peak usage.
+- Traffic is load balanced using AWS ALB which provides high availability as a managed feature.
+- Enabled fault-tolerance mechanisms like liveliness and readyness probe for core applications.
+- Features like data backup, additonal fault-tolerance, self-healing, etc can be implemented using additonal tooling using monitoring stack, AWS lambda etc.
+##### Security
+- Followed best practices in creating and deploying containers like security contexts, limits root privilage, reduce surface area, etc.
+- Secrets are managed using AWS secrets manager and handled using terraform's and helm's sensitive features.
+- Security groups are used to protect subnet access.
+- Configured SCRAM based authentication for Mongodb access.
+- Strict role based access is implemented using AWS IAM roles and policies for all the components.
+- Sperate tiers for app and data configured making it one step closer to implement network segmentation. Network segmentation is not implemented due to time limitation as of now.
+- Some credentials are still stored as kubernetes secrets. In production environments this should be avoided by enabling the applicaiton to get secrets from AWS secret manager or Vault directly.
+- Code scanning and image scanning must be implemented as part of build process. This is not included currently.
+- Pod security policy must be implemented to contol access between pods. This is not included currently.
+##### Operational efficiency
+- The whole Infrastructure as Code follows declarative approach and idempotency rather than an imperative approach.
+- Created easy to use overlay using Linux native Makefiles which maked operations easier.
+- The Makefile also makes it easy to stitch with CICD pipelines triggered using gitOps.
+- Tried to demonstrate version based IaC bundles which is a key feature to enable gitOps. Eg. version helm charts.
+- Currently some code is not bundled using version as part of this exercise, but it can be easily extended using git releases/tags  and an extra git repository for realease configs.
+- A docker based virtual environment can be easily created to make development, testing, or deployment easier. Not included currently.
+## Command and Usage: Build and deployment operations
 The following operation list all the available build and deployment operations
 ```
 $ make [TAB]
