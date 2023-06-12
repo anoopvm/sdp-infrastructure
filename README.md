@@ -10,12 +10,12 @@ The following tasks has been completed.
 - Created EC2 ami using Packer and is being used for EKS nodes.
 - Secuirity is considered in every stage of the design. More information here.
 - Avoided single point of failures.
-- Scalability is considered in every stage of the design. More information here.
+- SEcurity, scalability, and availability is considered in every stage of the design. More information [here](#design-considerations).
 - Created Ansible scripts to validate a few services.
 - Created an overlay Makefile to simplify various build and deployment activities enabling single button deployments or gitOps through CICD integration.
 - Added a simple prometheus+grafana observability stack.
 ## Architecture
-I used a simple three tier architecture with the application loadbalancers in public facing subnets and other components (application and database) deployed in private subnets. A very high level architecture is as shown in the image.
+A simple three tier architecture with the application loadbalancers in public facing subnets and other components (application and database) deployed in private subnets. A very high level architecture is as shown in the image. More about design and improvements [here](#design-considerations).
 ![hl-architecture](https://github.com/anoopvm/sdp-infrastructure/assets/24317749/3878f531-ca63-42de-a460-d3be756bae8b)
 ## Code Overview
 All resources created as part of the excercise is through Infrastructure as Code. Manual interference is limited to version management of certain components like helm charts, ami version etc. These could be automated as well but are avoided by design to enable better version control practices and code (IaC) reviews.
