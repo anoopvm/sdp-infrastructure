@@ -8,7 +8,14 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region  = var.region
+  profile = var.aws_profile
+}
+
+terraform {
+  backend "s3" {
+    key = "sdp-infrastructure/terraform.tfstate"
+  }
 }
 
 module "network_infra" {

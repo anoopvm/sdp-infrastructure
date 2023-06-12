@@ -1,4 +1,3 @@
-region = "us-east-1"
 tags = {
   Terraform        = "true"
   billing_category = "default"

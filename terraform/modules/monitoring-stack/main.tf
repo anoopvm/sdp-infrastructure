@@ -36,4 +36,8 @@ resource "helm_release" "ingress" {
   values = [
     "${file("${path.module}/configs/ingress.yaml")}"
   ]
+  set {
+    name = "namespace"
+    value = local.namespace
+  }
 }
