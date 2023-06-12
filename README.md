@@ -108,6 +108,9 @@ Following criterias were considered during the design also lists various approac
 - Currently some code is not bundled using version as part of this exercise, but it can be easily extended using git releases/tags  and an extra git repository for realease configs.
 - A docker based virtual environment can be easily created to make development, testing, or deployment easier. Not included currently.
 ## Commands and Usage: Build and deployment operations
+### Prerequisites
+- S3 backend is used for this project. Configurations are set at release-configs/common/backend.conf
+- Require an ACM certificate for SSL/TLS configuration
 The following operation list all the available build and deployment operations
 ```
 $ make [TAB]
@@ -184,6 +187,7 @@ Prerequisites:
 - Helm must be installed.
 - AWS cli must be installed.
 - AWS authentication must be setup either using one of the methods mentioned here - https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+- AWS profile name must be same as the environment. For staging environment, aws profile should be staging. This enables multiple accounts for multiple environments.
 
 Usage:
 ```
