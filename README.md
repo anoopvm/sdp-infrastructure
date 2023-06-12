@@ -5,7 +5,7 @@ The following tasks has been completed.
 - Dockerized the application and deployed as autoscaling kubernetes pods.
 - MongoDB running as pods.
 - [Screenshots](screenshots.md)
-- [Commands used](## Commands and Usage: Build and deployment operations)  
+- [Commands used](#Commands-and-Usage:-Build-and-deployment-operations)  
 - Kuberenetes components are deployed using helm charts and terraform helm provider.
 - Created EC2 ami using Packer and is being used for EKS nodes.
 - Secuirity is considered in every stage of the design. More information here.
