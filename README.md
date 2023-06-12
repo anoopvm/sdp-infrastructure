@@ -108,15 +108,16 @@ Following criterias were considered during the design also lists various approac
 - Currently some code is not bundled using version as part of this exercise, but it can be easily extended using git releases/tags  and an extra git repository for realease configs.
 - A docker based virtual environment can be easily created to make development, testing, or deployment easier. Not included currently.
 ## Commands and Usage: Build and deployment operations
-### Prerequisites
-- S3 backend is used for this project. Configurations are set at release-configs/common/backend.conf
-- Require an ACM certificate for SSL/TLS configuration
 The following operation list all the available build and deployment operations
 ```
 $ make [TAB]
 build-app              build-packer-image     deploy-infra           build-docker
 build-infra            deploy-app             destroy-infra          instance-sanity-check
 ```
+##### Prerequisites
+- S3 backend is used for this project. Configurations are set at release-configs/common/backend.conf
+- Require an ACM certificate for SSL/TLS configuration
+
 Usage of each make rule along with required configurations is listed below
 ### build-docker
 Builds the docker image by cloning the code repository and push to the docker repository.
