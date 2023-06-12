@@ -5,7 +5,7 @@ The following tasks has been completed.
 - Dockerized the application and deployed as autoscaling kubernetes pods.
 - MongoDB running as pods.
 - [Click here for screenshots](screenshots.md)
-- [Commands used](#commands-and-usage-build-and-deployment-operations)
+- [Click here for Commands used](#commands-and-usage-build-and-deployment-operations)
 - Kuberenetes components are deployed using helm charts and terraform helm provider.
 - Created EC2 ami using Packer and is being used for EKS nodes.
 - Secuirity is considered in every stage of the design. More information here.
@@ -108,7 +108,7 @@ Following criterias were considered during the design also lists various approac
 - Currently some code is not bundled using version as part of this exercise, but it can be easily extended using git releases/tags  and an extra git repository for realease configs.
 - A docker based virtual environment can be easily created to make development, testing, or deployment easier. Not included currently.
 ## Commands and Usage: Build and deployment operations
-The following operation list all the available build and deployment operations
+`make [TAB]` lists all the available build and deployment commands.
 ```
 $ make [TAB]
 build-app              build-packer-image     deploy-infra           build-docker
@@ -117,11 +117,11 @@ build-infra            deploy-app             destroy-infra          instance-sa
 ##### Prerequisites
 - S3 backend is used for this project. Configurations are set at release-configs/common/backend.conf
 - Require an ACM certificate for SSL/TLS configuration
-
-Usage of each make rule along with required configurations is listed below
+- Software requirements are listed under each command
+Usage of each make commands along with required configurations are listed below
 ### build-docker
 Builds the docker image by cloning the code repository and push to the docker repository.
-Prerequistes:
+<br><br>Prerequistes:
 - Docker engine must be installed.
 - Must be authenticated to push to the docker repo.
 - Choose a new version for the docker image.
@@ -188,7 +188,7 @@ Prerequisites:
 - Helm must be installed.
 - AWS cli must be installed.
 - AWS authentication must be setup either using one of the methods mentioned here - https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
-- AWS profile name must be same as the environment. For staging environment, aws profile should be staging. This enables multiple accounts for multiple environments.
+- AWS profile name must be same as the environment. For staging environment, aws profile should be staging. This enables separate accounts for separate environments.
 
 Usage:
 ```
@@ -249,3 +249,9 @@ Usage:
 ```
 make destroy-infra
 ```
+## Some Considerations
+This session explains why some assumptions and considerations are made.
+#### ACM certificate configuration
+ACM certificates are used as they are easy to work with from AWS environment. But due to the lack of an AWS hosted zone I used an existing domain name from a third party. The domain name validation for the certificates required some manual changes with the third party DNS provider and those steps are not automated for the purpose of this exercise. Hence a certificate must be created and the arn should be provided in the release-configs/application-terraform.tfvars file. Neverthless the ACM is created using terraform and the module is available here - `terraform/modules/acm-certs`.
+#### S3 Backend configuration
+S3 backend creation is not integrated with the `make` commands. It is possible using an overlay script but it is avoided as in a real life usecase the backend is already there or at least maintained in a separate CICD AWS cluster. Hence, it is not integrated with the Makefile.
