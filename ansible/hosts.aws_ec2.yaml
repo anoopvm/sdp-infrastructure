@@ -1,11 +1,8 @@
-plugin: amazon.aws.aws_ec2
-
-regions:
-- us-east-1
-
 compose:
   ansible_host: instance_id
-
 filters:
+  instance-state-name: running
   tag:aws:eks:cluster-name: staging-sdp
-  instance-state-name : running
+plugin: amazon.aws.aws_ec2
+regions:
+- us-east-1
