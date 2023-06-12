@@ -38,6 +38,7 @@ Contents of each folder/file as below:
 - Instance access is managed by AWS SSM. No external or internal SSH service access.
 - Seperate autoscaling group for app tier and data tier enabling efficient scaling strategy.
 #### Devops Practical web app
+- Docker container created using multistage build to reduce attack surface and to avoid privilage escalations.
 - Deployed as stateless horizontally scalable deployments accessible from a load balancer.
 - SSL/TLS handshake happens at ALB using ACM certificates.
 - http connections are redirected to https even before reaching the application.
