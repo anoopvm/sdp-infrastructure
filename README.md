@@ -1,11 +1,12 @@
 # sdp-infrastructure
 ## Summary
 The following tasks has been completed.
-- Kubernetes cluster (EKS) created end to end using terraform
-- Dockerized the application and serving requests as kubernetes pods
-- MongoDB running as pods
-- Kuberenetes components are deployed using helm charts and terraform helm provider
-- Created EC2 ami using Packer and is being used for EKS nodes
+- Kubernetes cluster (EKS) created end to end using terraform.
+- Dockerized the application and deployed as autoscaling kubernetes pods.
+- MongoDB running as pods.
+- Screenshots - [a relative link](screenshots.md)
+- Kuberenetes components are deployed using helm charts and terraform helm provider.
+- Created EC2 ami using Packer and is being used for EKS nodes.
 - Secuirity is considered in every stage of the design. More information here.
 - Avoided single point of failures.
 - Scalability is considered in every stage of the design. More information here.
