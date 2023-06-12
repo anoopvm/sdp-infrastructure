@@ -31,7 +31,7 @@ Contents of each folder/file as below:
 <br><br>**ansible:** Ansible script to do a quick sanity check on instances created using the custom image.
 <br><br>**release-conifgs:** Single place for all the configurations. This is the only place where any configuration changes are made. Tried to make the configs as simple as possible by exposing only required configurations. As the project grows more configs can be exposed here as required. This folder also segragates the configuration for each environment (dev, staging, production etc).
 <br><br>**Makefile:** Single entrypoint for all the build and deployment activities for this exercise.
-## Usage: Build and deployment operations
+## Build and deployment operations
 The following operation list all the available build and deployment operations
 ```
 $ make [TAB]
@@ -39,7 +39,7 @@ build-app              build-packer-image     deploy-infra           build-docke
 build-infra            deploy-app             destroy-infra          instance-sanity-check
 ```
 Usage of each make rule along with required configurations is listed below
-##### build-docker
+### build-docker
 Builds the docker image by cloning the code repository and push to the docker repository.
 Prerequistes:
 - Docker engine must be installed.
@@ -113,7 +113,7 @@ Usage:
 ```
 make build-infra ENV=<dev|staging|prod>
 ```
-##### deploy-infra
+### deploy-infra
 This deploys all cloud resources and required addons.
 
 Prerequisites:
@@ -123,7 +123,7 @@ usage:
 ```
 make deploy-infra ENV=<dev|staging|prod>
 ```
-##### build-app
+### build-app
 Like build-infra this only do validation and terraform plan for all the kubernetes manifests declared in helm charts.
 The following configurations are required. Helm recommends to use versioned charts, usually resides in Chart.yaml. Terraform uses that version for maintaining its idempotent nature. The helm chart must be versioned in respective Chart.yaml if making any change and must be updated in `release-configs/<dev|staging|prod>/application-terraform.tfvars`. `certificate_arn` is the ACM certificate arn (Only supports ACM certificates currently, refer HERE#####). `sdp_namepace` is the namespace where the devops practical web-app will be deployed.
 ```
@@ -141,7 +141,7 @@ Usage:
 ```
 make build-app ENV=<dev|staging|prod>
 ```
-##### deploy-app
+### deploy-app
 Deploys the kubernetes resources mentioned in `build-app`.
 
 Prerequisites:
@@ -150,7 +150,7 @@ Usage:
 ```
 make deploy-app ENV=<dev|staging|prod>
 ```
-##### instance-sanity-check
+### instance-sanity-check
 Run ansible playbook to validate if ntp and a few other services like kubelet and containerd up and running.
 Prerequisites:
 - Ansible must be installed.
@@ -160,7 +160,7 @@ Usage:
 ```
 make instance-sanity-check
 ```
-##### destroy-infra
+### destroy-infra
 Delete EKS cluster, network infrastructure and other cloud components.
 Prerequisites:
 - Same as `build-deploy`
