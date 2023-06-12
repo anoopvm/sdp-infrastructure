@@ -1,3 +1,11 @@
+variable "aws_profile" {
+  type = string
+}
+
+variable "region" {
+  type = string
+}
+
 variable "sdp_helm_version" {
   type = string
 }

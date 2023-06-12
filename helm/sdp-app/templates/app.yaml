@@ -44,16 +44,20 @@ spec:
           port: http
         initialDelaySeconds: 10
         periodSeconds: 20 
+      securityContext:
+        allowPrivilegeEscalation: false        
     affinity:
       podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                    - sdp-app
-            topologyKey: topology.kubernetes.io/zone
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - sdp-app
+              topologyKey: topology.kubernetes.io/zone
     nodeSelector:
       tier: app
     tolerations:

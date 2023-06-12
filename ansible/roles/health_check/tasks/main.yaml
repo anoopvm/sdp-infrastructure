@@ -1,4 +1,4 @@
-- name: Validate kubelet service status
+- name: Validate services status
   service_facts:
   register: services_state
 

@@ -5,6 +5,17 @@ provider "helm" {
   }
 }
 
+provider "aws" {
+  region  = var.region
+  profile = var.aws_profile
+}
+
+terraform {
+  backend "s3" {
+    key = "sdp-applications/terraform.tfstate"
+  }
+}
+
 data "aws_secretsmanager_secret" "secrets" {
   name = "sdp/database/mongo"
 }
